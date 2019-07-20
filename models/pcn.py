@@ -1,0 +1,37 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.autograd import Variable
+import numpy as np
+
+
+class STN3d(nn.Module):
+    def __init__(self, args, num_points=2500):
+        super(STN3d, self).__init__()
+        self.num_points = num_points
+        self.args = args
+        self.conv_1 = torch.nn.Conv1d(3, 64, 1)
+        self.conv_2 = torch.nn.Conv1d(64, 128, 1)
+        self.conv_3 = torch.nn.Conv1d(128, 1024, 1)
+        self.fc1 = nn.Linear(1024, 512)
+        self.fc2 = nn.Linear(512, 256)
+        self.fc3 = nn.Linear(256, 9)
+        self.relu = nn.ReLU()
+
+    def forward(self, x):
+        batchsize = x.size()[0]
+        x = F.relu(self.conv_1(x))
+        x = F.relu(self.conv_2(x))
+        x = F.relu(self.conv_3(x))
+        x, _ = torch.max(x, 2)
+        x = x.view(-1, 1024)
+
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+
+        iden = Variable(torch.from_numpy(np.array([1, 0, 0, 0,
+                                                   1, 0, 0, 0, 1]).astype(np.float32))).view(1, 9).repeat(batchsize, 1)
+        x = x + iden
+        x = x.view(-1, 3, 3)
+        return x
