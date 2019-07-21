@@ -13,7 +13,7 @@ from multiprocessing import Process, Event
 
 
 def print_error(func):
-    '''Flush out error messages. Mainly used for debugging separate processes'''
+    """Flush out error messages. Mainly used for debugging separate processes"""
 
     def func_wrapper(*args, **kwargs):
         try:
@@ -28,12 +28,12 @@ def print_error(func):
 class DataProcess(Process):
 
     def __init__(self, data_queue, data_paths, data_shape, batch_size, repeat=True):
-        '''
+        """
         data_queue : Multiprocessing queue
         data_paths : list of data and label pair used to load data
         data_shape : shape of data
         repeat : if set True, return data until exit is set
-        '''
+        """
         Process.__init__(self)
         # Queue to transfer the loaded mini batches
         self.data_queue = data_queue
@@ -92,12 +92,6 @@ class DataProcess(Process):
             if iteration % self.gc_freq == 0:
                 gc.collect()
 
-    def load_datum(self, path):
-        pass
-
-    def load_label(self, path):
-        pass
-
 
 def get_while_running(data_processes, data_queue, sleep_time=0):
     """
@@ -140,6 +134,7 @@ def kill_data_processes(queue, processes):
 
     for p in processes:
         p.terminate()
+
 
 def test_process():
     from multiprocessing import Queue

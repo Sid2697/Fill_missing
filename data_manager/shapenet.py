@@ -61,7 +61,7 @@ class ShapenetDataProcess(DataProcess):
             gtpts = load_h5(fname.replace('partial', 'gt'))
         if train:
             gtpts, partial = augment_cloud([gtpts, partial], args)
-        # TODO: Check the input and output shape in pad_cloudN
+        # TODO[DONE]: Check the input and output shape in pad_cloudN
         partial = pad_cloudN(partial, args.inpts)
         return partial, gtpts
 
