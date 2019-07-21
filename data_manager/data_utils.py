@@ -22,8 +22,8 @@ def pad_cloudN(P, Nin):
         ii = rs.choice(N, Nin - N)
         choice = np.concatenate([range(N),ii])
     P = P[choice, :]
-
     return P
+
 
 def augment_cloud(Ps, args):
     """" Augmentation on XYZ and jittering of everything """
@@ -41,7 +41,7 @@ def augment_cloud(Ps, args):
             M = np.dot(transforms3d.zooms.zfdir2mat(-1, [0,0,1]), M)
     result = []
     for P in Ps:
-        P[:,:3] = np.dot(P[:,:3], M.T)
+        P[:, :3] = np.dot(P[:,:3], M.T)
 
         if args.pc_augm_jitter:
             sigma, clip= 0.01, 0.05 # https://github.com/charlesq34/pointnet/blob/master/provider.py#L74
@@ -49,14 +49,15 @@ def augment_cloud(Ps, args):
         result.append(P)
     return result
 
+
 def load_h5(path, verbose=False):
     if verbose:
         print("Loading %s \n" % (path))
     f = h5py.File(path, 'r')
     cloud_data = np.array(f['data'])
     f.close()
-
     return cloud_data.astype(np.float64)
+
 
 def load_csv(path, verbose=False):
     if verbose:

@@ -48,7 +48,6 @@ class DataProcess(Process):
         self.exit = Event()
         self.shuffle_db_inds()
 
-
     def shuffle_db_inds(self):
         # Randomly permute the training roidb
         if self.repeat:
@@ -101,6 +100,13 @@ class DataProcess(Process):
 
 
 def get_while_running(data_processes, data_queue, sleep_time=0):
+    """
+    This method yields the input dictionary from the data queue
+    :param data_processes: Data process
+    :param data_queue: Data Queue
+    :param sleep_time: Time to wait
+    :return: Input Dictionary (Type: tuple)
+    """
     while True:
         time.sleep(sleep_time)
         try:

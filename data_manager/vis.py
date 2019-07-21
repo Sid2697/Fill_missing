@@ -6,7 +6,7 @@ import matplotlib
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
-def plot_colorxyzs(xyzs, zdir='y', cmap='Reds', xlim=(-0.3, 0.3), ylim=(-0.3, 0.3), zlim=(-0.3, 0.3)):
+def plot_colorxyzs(xyzs, zdir='y', cmap='Reds', xlim=(-0.3, 0.3), ylim=(-0.3, 0.3), zlim=(-0.3, 0.3), show=False):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     elev = 30
@@ -19,11 +19,12 @@ def plot_colorxyzs(xyzs, zdir='y', cmap='Reds', xlim=(-0.3, 0.3), ylim=(-0.3, 0.
     ax.set_ylim(ylim)
     ax.set_zlim(zlim)
     plt.subplots_adjust(left=0.05, right=0.95, bottom=0.05, top=0.9, wspace=0.1, hspace=0.1)
+    if show:
+        plt.show()
     return fig
 
 
-
-def plot_xyz(xyz, zdir='y', cmap='Reds', xlim=(-0.3, 0.3), ylim=(-0.3, 0.3), zlim=(-0.3, 0.3)):
+def plot_xyz(xyz, zdir='y', cmap='Reds', xlim=(-0.3, 0.3), ylim=(-0.3, 0.3), zlim=(-0.3, 0.3), show=False):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     elev = 30
@@ -35,7 +36,10 @@ def plot_xyz(xyz, zdir='y', cmap='Reds', xlim=(-0.3, 0.3), ylim=(-0.3, 0.3), zli
     ax.set_ylim(ylim)
     ax.set_zlim(zlim)
     plt.subplots_adjust(left=0.05, right=0.95, bottom=0.05, top=0.9, wspace=0.1, hspace=0.1)
+    if show:
+        plt.show()
     return fig
+
 
 def plot_pcds(filename, pcds, titles, use_color=[],color=None, suptitle='', sizes=None, cmap='Reds', zdir='y',
                          xlim=(-0.3, 0.3), ylim=(-0.3, 0.3), zlim=(-0.3, 0.3)):
@@ -65,6 +69,7 @@ def plot_pcds(filename, pcds, titles, use_color=[],color=None, suptitle='', size
         plt.close(fig)
     else:
         plt.show()
+
 
 def plot_pcds_patterns(filename, pcds, titles, use_color=[],color=None, suptitle='', sizes=None, cmap='Reds', zdir='y',
                          xlim=(-0.3, 0.3), ylim=(-0.3, 0.3), zlim=(-0.3, 0.3)):
