@@ -6,8 +6,8 @@ import sys
 import argparse
 import numpy as np
 # from vis import plot_pcds
-from data_process import DataProcess, get_while_running, kill_data_processes
-from data_utils import load_h5, load_csv, augment_cloud, pad_cloudN
+from .data_process import DataProcess, get_while_running, kill_data_processes
+from .data_utils import load_h5, load_csv, augment_cloud, pad_cloudN
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
