@@ -35,3 +35,40 @@ class STN3d(nn.Module):
         x = x + iden
         x = x.view(-1, 3, 3)
         return x
+
+
+class PointNetfeat(nn.Module):
+    def __init__(self, args, num_points=2500, global_feat=True, trans=False):
+        super(PointNetfeat, self).__init__()
+        self.args = args
+        self.conv1 = nn.Conv1d(3, 64, 1)
+        self.conv2 = nn.Conv1d(64, 128, 1)
+        self.conv3 = nn.Conv1d(128, args.code_nfts, 1)
+
+        self.bn1 = torch.nn.BatchNorm1d(64)
+        self.bn2 = torch.nn.BatchNorm1d(128)
+        self.bn3 = torch.nn.BatchNorm1d(args.code_nfts)
+        self.trans = trans
+
+        self.num_points = num_points
+        self.global_feat = global_feat
+
+    def forward(self, x):
+        x = F.relu(self.bn1(self.conv1(x)))
+        x = F.relu(self.bn2(self.conv2(x)))
+        x = self.bn3(self.conv3(x))
+        x, _ = torch.max(x, 2)
+        x = x.view(-1, self.args.code_nfts)
+        """
+        Shape of output is [32, 1024]
+        """
+        return x
+
+
+def weight_init(m):
+    classname = m.__class__.__name__
+    if classname.find("Conv") != -1:
+        m.weight.data.normal_(0.0, 0.02)
+    elif classname.find("BatchNorm") != -1:
+        m.weight.data.normal_(1.0, 0.02)
+        m.bias.data.fill_(0)

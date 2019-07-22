@@ -1,3 +1,4 @@
+# from losses import chamfer_distance_sklearn
 import torch.optim as optim
 import torchnet as tnt
 from tqdm import tqdm
@@ -46,4 +47,7 @@ def train(args, data_queue, data_processes):
         targets, clouds_data = data_queue.get()
         # Zeroing the previous grads
         args.optimizer.zero_grad()
-        # TODO: Take up the code from here
+
+        loss = args.step(args, targets, clouds_data)
+        # print("Loss is ", loss)
+        # TODO: Complete this method
