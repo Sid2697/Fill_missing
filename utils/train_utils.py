@@ -44,17 +44,18 @@ def train(args, data_queue, data_processes, epoch):
     for i in range(Nl):
         meters.append(tnt.meter.AverageValueMeter())
 
+    targets, partial = data_queue.get()
+    partial = torch.from_numpy(partial[1])
+    partial_one = partial[1:3]
+
     for batch in tqdm(range(num_batches)):
-        # Getting data
-        targets, partial = data_queue.get()
-        partial = torch.from_numpy(partial[1])
         # Zeroing the previous grads
         args.optimizer.zero_grad()
-        out, code = args.model(partial)
+        out, code = args.model(partial_one)
         out = out.transpose(2, 1).contiguous()
-        loss = args.error(out, partial)
+        loss = args.error(out, partial_one)
         loss.backward()
         if batch % 10 == 0:
-            plot(batch, epoch, partial[1].detach().numpy(), out[1].detach().numpy()),
+            plot(batch, epoch, partial_one[1].detach().numpy(), out[1].detach().numpy())
 
         args.optimizer.step()
