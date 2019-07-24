@@ -6,14 +6,26 @@ import torch.nn as nn
 import torch
 
 
-def AtlasNet_step(args, targets_in, clouds_data):
-    # TODO: This method is not yet complete
-    targets = Variable(torch.from_numpy(targets_in), requires_grad=False).float()
-    targets = targets.transpose(2, 1).contiguous()
-    inp = Variable(torch.from_numpy(clouds_data[1]), requires_grad=False).float()
-    output = args.model.forward(inp, args.grid)
-    dist = chamfer_distance_sklearn(targets.numpy(), inp.numpy())
-    return dist
+# def AtlasNet_step(args, targets_in, clouds_data):
+#     TODO: This method is not yet complete
+# targets = Variable(torch.from_numpy(targets_in), requires_grad=False).float()
+# targets = targets.transpose(2, 1).contiguous()
+# inp = Variable(torch.from_numpy(clouds_data[1]), requires_grad=False).float()
+# output = args.model.forward(inp, args.grid)
+# dist = chamfer_distance_sklearn(targets.numpy(), inp.numpy())
+# return dist
+
+
+def AtlasNet_create_model(args):
+    """ Creates model """
+    model = nn.DataParallel(AtlasNet(args, num_points=args.npts, nb_primitives=args.nb_primitives))
+    args.enc_params = sum([p.numel() for p in model.module.encoder.parameters()])
+    args.dec_params = sum([p.numel() for p in model.module.decoder.parameters()])
+    args.nparams = sum([p.numel() for p in model.module.parameters()])
+    print('Total number of parameters: {}!'.format(args.nparams))
+    print('Model is:\n', model)
+    model.apply(weight_init)
+    return model
 
 
 class PointGenCon(nn.Module):

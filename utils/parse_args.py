@@ -9,8 +9,10 @@ def parse_args():
     parser.add_argument('--wd', default=0, type=float, help='Weight Decay')
     parser.add_argument('--lr', default=1e-3, type=float, help='Initial Learning Rate')
 
-    parser.add_argument('--NET', default='STN3d', help='Network used')
+    parser.add_argument('--NET', default='AtlasNet', help='Network used')
     parser.add_argument('--code_nfts', default=1024, type=int, help='Encoder output feature size')
+
+    parser.add_argument('--nb_primitives', default=4, type=int, help='Number of primitives for AtlasNet')
 
     parser.add_argument('--batch_size', default=32, type=int, help='Batch Size')
     parser.add_argument('--nworkers', default=4, type=int, help='Number of subprocess for data loading')
