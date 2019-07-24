@@ -4,3 +4,4 @@
 shapenet/
 */__pycache__
 .DS_Store
+images/

@@ -1,7 +1,9 @@
 # from losses import chamfer_distance_sklearn
+from data_manager.vis import plot
 import torch.optim as optim
 import torchnet as tnt
 from tqdm import tqdm
+import torch
 
 
 def create_optimizer(args, model):
@@ -20,7 +22,7 @@ def create_optimizer(args, model):
     return optimizer
 
 
-def train(args, data_queue, data_processes):
+def train(args, data_queue, data_processes, epoch):
     """
     Training for one epoch
     :param args: Arguments for the code
@@ -44,10 +46,15 @@ def train(args, data_queue, data_processes):
 
     for batch in tqdm(range(num_batches)):
         # Getting data
-        targets, clouds_data = data_queue.get()
+        targets, partial = data_queue.get()
+        partial = torch.from_numpy(partial[1])
         # Zeroing the previous grads
         args.optimizer.zero_grad()
+        out, code = args.model(partial)
+        out = out.transpose(2, 1).contiguous()
+        loss = args.error(out, partial)
+        loss.backward()
+        if batch % 10 == 0:
+            plot(batch, epoch, partial[1].detach().numpy(), out[1].detach().numpy()),
 
-        loss = args.step(args, targets, clouds_data)
-        # print("Loss is ", loss)
-        # TODO: Complete this method
+        args.optimizer.step()

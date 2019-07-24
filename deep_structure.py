@@ -3,16 +3,15 @@ This file contains the code similar to the implementation of the code in paper D
 """
 
 import torch
-import numpy as np
-# from models.AtlasNet import *
 from models.PointNetFCAE import *
 from multiprocessing import Queue
-from data_manager.vis import plot_pcds, plot_xyz
+from data_manager.vis import plot_pcds
 from utils.parse_args import parse_args
+from utils.train_utils import create_optimizer, train
 from data_manager.shapenet import ShapenetDataProcess
 from data_manager.data_process import kill_data_processes
 
-show = True
+epoch = 200
 
 args = parse_args()
 args.model = PointNetFCAE_create_model(args)
@@ -24,18 +23,13 @@ for i in range(args.nworkers):
     data_processes.append(ShapenetDataProcess(data_queue, args, split='train', repeat=False))
     data_processes[-1].start()
 
-targets, partial = data_queue.get()
-partial = partial[1]
-partial = torch.from_numpy(partial)
-partial_plot = partial.transpose(2, 1).contiguous()
+args.error = torch.nn.MSELoss()
+args.optimizer = create_optimizer(args, args.model)
 
-error = torch.nn.MSELoss()
+i = 0
 
-out, code = args.model(partial)
-
-if show:
-    print("Plotting the point clouds!")
-    plot_pcds(None, [out[0].detach().numpy(), partial_plot[0].detach().numpy()], ['Output', 'Input'],
-              use_color=[0, 0], color=[None, None])
+while i != epoch:
+    train(args, data_queue, data_processes, i)
+    i += 1
 
 kill_data_processes(data_queue, data_processes)

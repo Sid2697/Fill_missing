@@ -1,10 +1,26 @@
 """
 This piece of code was taken from https://github.com/lynetcha/completion3d/tree/master/shared
 """
-from matplotlib import pyplot as plt
+
 import matplotlib
-from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
+from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+
+def plot(batch, epoch, partial, out):
+    fig = plt.figure(figsize=plt.figaspect(0.5))
+    ax = fig.add_subplot(1, 2, 1, projection='3d')
+    ax.scatter(partial[0, :], partial[1, :], partial[2, :], c=partial[0, :], s=20, zdir='y', cmap='Reds', vmin=-1, vmax=0.5)
+    plt.title('Input')
+    ax = fig.add_subplot(1, 2, 2, projection='3d')
+    ax.scatter(out[0, :], out[1, :], out[2, :], c=out[0, :], s=20, zdir='y', cmap='Reds', vmin=-1,
+               vmax=0.5)
+    plt.title('Output')
+    name = 'images/batch_' + str(batch) + '_epoch_' + str(epoch) + '.png'
+    fig.savefig(name)
+    plt.close(fig)
+
 
 def plot_colorxyzs(xyzs, zdir='y', cmap='Reds', xlim=(-0.3, 0.3), ylim=(-0.3, 0.3), zlim=(-0.3, 0.3), show=False):
     fig = plt.figure()
