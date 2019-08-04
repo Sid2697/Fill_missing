@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 from models.encoders import PointNetfeat
 
@@ -19,6 +20,8 @@ def PointNetFCAE_create_model(args):
     args.nparams = sum([p.numel() for p in model.module.parameters()])
     print('Total number of parameters: {}'.format(args.nparams))
     print(model)
+    if torch.cuda.is_available():
+        model = model.cuda()
     return model
 
 

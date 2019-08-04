@@ -4,8 +4,8 @@ This file contains the code similar to the implementation of the code in paper D
 
 import torch
 from models.PointNetFCAE import *
+from models.MLP import *
 from multiprocessing import Queue
-from data_manager.vis import plot_pcds
 from utils.parse_args import parse_args
 from utils.train_utils import create_optimizer, train
 from data_manager.shapenet import ShapenetDataProcess
@@ -14,7 +14,8 @@ from data_manager.data_process import kill_data_processes
 epoch = 200
 
 args = parse_args()
-args.model = PointNetFCAE_create_model(args)
+# args.model = PointNetFCAE_create_model(args)
+args.model = MLP()
 
 data_processes = []
 data_queue = Queue(1)
@@ -30,6 +31,6 @@ i = 0
 
 while i != epoch:
     train(args, data_queue, data_processes, i)
-    i += 1
+    i -= 1
 
 kill_data_processes(data_queue, data_processes)
