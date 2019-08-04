@@ -31,6 +31,6 @@ i = 0
 
 while i != epoch:
     train(args, data_queue, data_processes, i)
-    i -= 1
+    i += 1
 
 kill_data_processes(data_queue, data_processes)

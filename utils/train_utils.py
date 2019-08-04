@@ -76,7 +76,7 @@ def train(args, data_queue, data_processes, epoch):
         loss.backward()
         # plot_temp(partial[1].detach().numpy())
         if batch % 100 == 0:
-            print(loss)
+            print("Loss is", loss)
             plot(batch, epoch, partial[1].detach().numpy(), out[1].detach().numpy())
 
         args.optimizer.step()
