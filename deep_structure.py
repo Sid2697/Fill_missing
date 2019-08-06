@@ -5,6 +5,7 @@ This file contains the code similar to the implementation of the code in paper D
 import torch
 from models.PointNetFCAE import *
 from models.MLP import *
+from utils.train_utils import chamfer
 from multiprocessing import Queue
 from utils.parse_args import parse_args
 from utils.train_utils import create_optimizer, train
@@ -24,7 +25,8 @@ for i in range(args.nworkers):
     data_processes.append(ShapenetDataProcess(data_queue, args, split='train', repeat=False))
     data_processes[-1].start()
 
-args.error = torch.nn.MSELoss()
+# args.error = torch.nn.MSELoss()
+# args.error = ChamferLoss()
 args.optimizer = create_optimizer(args, args.model)
 
 i = 0
